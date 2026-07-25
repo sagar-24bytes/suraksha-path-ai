@@ -22,7 +22,7 @@ SurakshaPath AI is a real-time, 5-subsystem fire evacuation platform that contin
 # Install dependencies
 pip install -r requirements.txt
 
-# Run system verification test suite
+# Run system verification test suite (65 tests)
 python -m unittest discover -s tests -p "test_*.py"
 
 # Launch the Fire Commander Dashboard
@@ -37,6 +37,7 @@ streamlit run src/dashboard.py
 - 🚀 **Deployment & Setup Guide** → [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md)
 - 🎯 **Interactive Scenario Demo Guide** → [`docs/DEMO_GUIDE.md`](docs/DEMO_GUIDE.md)
 - 💡 **Key Design Decisions (ADRs)** → [`docs/DESIGN_DECISIONS.md`](docs/DESIGN_DECISIONS.md)
+- ✅ **System Validation & Acceptance Report** → [`docs/VALIDATION_REPORT.md`](docs/VALIDATION_REPORT.md)
 
 ---
 
@@ -79,7 +80,7 @@ streamlit run src/dashboard.py
 | **Transport Abstraction** | `communication/` | Abstract transport interface, canonical `TelemetryPacket` schema, Mock/MQTT transports |
 | **Shared Routing Subsystem** | `routing/` | Single routing authority, Dijkstra pathfinder, dynamic edge weight formula, self-invalidating route cache |
 | **Fire Commander Dashboard** | `src/` | Operator Streamlit dashboard, Plotly floor plan, Explainability card, 5-aspect health monitor |
-| **Engineering Docs** | `docs/` | Complete documentation suite (Architecture, Sequence, APIs, Deployment, Demo, ADRs) |
+| **Engineering Docs** | `docs/` | Complete documentation suite (Architecture, Sequence, APIs, Deployment, Demo, ADRs, Validation) |
 
 ## Tech Stack
 
@@ -132,6 +133,8 @@ suraksha_path_ai/
 ├── src/                                # Subsystem 3: Fire Commander Dashboard
 │   ├── models.py                       # Shared Python data models & enums
 │   ├── config_loader.py                # YAML configuration loader
+│   ├── system_coordinator.py           # Master 5-subsystem bridge
+│   ├── dashboard_components/           # Modular UI rendering components
 │   └── dashboard.py                    # Streamlit Fire Commander UI shell
 ├── docs/                               # Engineering Documentation Suite
 │   ├── ARCHITECTURE.md                 # System Architecture Specification
@@ -139,8 +142,9 @@ suraksha_path_ai/
 │   ├── API_CONTRACTS.md                # API Contracts & Data Schemas
 │   ├── DEPLOYMENT.md                   # Deployment & Setup Guide
 │   ├── DEMO_GUIDE.md                   # Interactive Scenario Demo Guide
-│   └── DESIGN_DECISIONS.md             # Key Architectural Rationale
-└── tests/                              # Comprehensive Unit Test Suite
+│   ├── DESIGN_DECISIONS.md             # Key Architectural Rationale
+│   └── VALIDATION_REPORT.md            # System Validation & Acceptance Report
+└── tests/                              # Comprehensive Unit & Integration Test Suite
 ```
 
 ---
