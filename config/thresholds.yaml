@@ -1,0 +1,120 @@
+# =============================================================
+# SurakshaPath AI — Thresholds and Algorithm Parameters
+# =============================================================
+# Every tunable constant used by the business logic.
+# No magic numbers in code — all values come from here.
+# =============================================================
+
+# ----------------------------------------------------------
+# Sensor Fusion Weights
+# ----------------------------------------------------------
+# Base weights for each sensor type in the fusion formula:
+#   H_z = Σ(w_i · c_i · t_i) / Σ(w_i · c_i)
+# Must sum to a meaningful total (normalization is automatic).
+
+sensor_weights:
+  TEMPERATURE: 0.30
+  SMOKE: 0.25
+  FLAME: 0.40
+
+# ----------------------------------------------------------
+# Hazard Level Thresholds
+# ----------------------------------------------------------
+# Maps continuous hazard score (0.0–1.0) to discrete levels.
+# Each level has [min_inclusive, max_exclusive).
+# CRITICAL upper bound is 1.0 inclusive.
+
+hazard_levels:
+  SAFE:      [0.0, 0.2]
+  ADVISORY:  [0.2, 0.4]
+  WARNING:   [0.4, 0.6]
+  DANGER:    [0.6, 0.8]
+  CRITICAL:  [0.8, 1.0]
+
+# ----------------------------------------------------------
+# Risk Engine Parameters
+# ----------------------------------------------------------
+# Edge weight formula:
+#   W = W_base × exp(k × H_v) × (1 + beta × (1 - mean_confidence))
+#
+# k:     Exponential hazard sensitivity (higher = more aggressive avoidance)
+# beta:  Uncertainty penalty factor
+# blocked_threshold: Hazard score at which an edge is completely blocked
+
+risk_engine:
+  k: 4.0
+  beta: 0.3
+  blocked_threshold: 0.8
+
+# ----------------------------------------------------------
+# Fail-Safe Configuration
+# ----------------------------------------------------------
+# failsafe_hazard:  Assumed hazard score when ALL sensors in a zone fail.
+#                   0.7 = DANGER level. This is fail-safe-high:
+#                   "absence of data = assume the worst."
+#
+# stale_timeout_ticks: Number of ticks without update before a
+#                      sensor reading is considered stale.
+#
+# confidence_decay_rate: Per-tick confidence reduction for stale readings.
+
+failsafe:
+  failsafe_hazard: 0.7
+  stale_timeout_ticks: 5
+  confidence_decay_rate: 0.15
+
+# ----------------------------------------------------------
+# Sensor Normalization
+# ----------------------------------------------------------
+# Transfer function parameters for normalizing raw sensor
+# values to 0.0–1.0 threat levels.
+#
+# Temperature: Sigmoid curve.
+#   midpoint: temperature (°C) at which normalized value = 0.5
+#   steepness: slope of the sigmoid (higher = sharper transition)
+#
+# Smoke: Linear mapping.
+#   max_value: obscuration (%/ft) at which normalized value = 1.0
+#
+# Flame: Binary with confidence.
+#   No parameters needed — 0 or 1 modulated by detector confidence.
+
+sensor_normalization:
+  temperature:
+    midpoint_c: 80.0
+    steepness: 0.05
+    ambient_c: 25.0
+    max_c: 800.0
+  smoke:
+    max_obscuration: 100.0
+  flame:
+    # Flame is binary; no normalization parameters.
+    pass: true
+
+# ----------------------------------------------------------
+# Cross-Validation Rules
+# ----------------------------------------------------------
+# Confidence adjustments when sensor readings are inconsistent.
+# boost: multiplier applied when sensors agree (fire confirmed).
+# penalty: multiplier applied when sensors disagree (possible false alarm).
+
+cross_validation:
+  agreement_boost: 1.10
+  disagreement_penalty: 0.50
+
+# ----------------------------------------------------------
+# Fire Simulation Defaults
+# ----------------------------------------------------------
+# These are the base values used when a scenario does not
+# override them.
+
+fire_defaults:
+  growth_rate: 0.03
+  smoke_diffusion_rate: 0.15
+  base_spread_probability: 0.05
+  flashover_threshold: 0.8
+  barrier_factors:
+    open: 1.0
+    fire_door: 0.3
+    fire_wall: 0.1
+    fire_rated_wall: 0.0

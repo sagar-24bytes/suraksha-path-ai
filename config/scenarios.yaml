@@ -1,0 +1,317 @@
+# =============================================================
+# SurakshaPath AI — Simulation Scenarios
+# =============================================================
+# Each scenario defines a unique fire event sequence designed
+# to demonstrate specific system capabilities to judges.
+#
+# Scenario structure:
+#   name:              Display name
+#   description:       What this scenario tests (shown to judges)
+#   duration_s:        Maximum simulation duration in seconds
+#   initial_occupancy: Occupant count per zone at t=0
+#   events:            Time-ordered list of simulation events
+#   overrides:         Optional parameter overrides
+#
+# Event types:
+#   IGNITE         — Start a fire in a zone
+#   SENSOR_FAIL    — Disable a specific sensor
+#   SENSOR_RECOVER — Re-enable a previously failed sensor
+#   COMM_FAIL      — Communication loss for an entire zone
+#   COMM_RESTORE   — Restore communication to a zone
+#   BLOCK_EXIT     — Physically block an exit
+#   UNBLOCK_EXIT   — Restore a previously blocked exit
+#
+# Sensor IDs follow the convention:
+#   T-{zone_id}  = Temperature sensor
+#   SM-{zone_id} = Smoke sensor
+#   FL-{zone_id} = Flame sensor
+# =============================================================
+
+scenarios:
+
+  # ===========================================================
+  # SCENARIO 1: Kitchen Fire
+  # ===========================================================
+  # Tests: Basic fire spread, smoke propagation through
+  #        corridors, dynamic rerouting away from Floor 1 East.
+  # Duration: 180s (3 minutes)
+  # ===========================================================
+  kitchen_fire:
+    name: "Kitchen Fire"
+    description: >
+      Fire starts in the Kitchen (R-105) from a cooking accident.
+      Smoke rapidly fills the East Corridor (C-02). Evacuation
+      routes dynamically reroute occupants through the West
+      Corridor and Main Entrance. Demonstrates basic sensor
+      fusion and path recalculation.
+    duration_s: 180
+
+    initial_occupancy:
+      R-101: 4
+      R-102: 3
+      R-103: 10
+      R-104: 5
+      R-105: 3
+      R-106: 1
+      L-01: 5
+      C-01: 0
+      C-02: 0
+      S-01: 0
+      R-201: 2
+      R-202: 4
+      R-203: 3
+      R-204: 4
+      C-03: 0
+
+    events:
+      - tick: 5
+        type: "IGNITE"
+        zone_id: "R-105"
+        parameters:
+          intensity: 0.15
+
+      - tick: 45
+        type: "SENSOR_FAIL"
+        sensor_id: "SM-R-105"
+        parameters:
+          failure_mode: "DEGRADED"
+
+    overrides:
+      fire_growth_rate: 0.03
+      smoke_diffusion_rate: 0.18
+
+  # ===========================================================
+  # SCENARIO 2: Electrical Room Fire
+  # ===========================================================
+  # Tests: Fast-spreading high-temperature fire, potential to
+  #        block Emergency Exit East, multi-exit rerouting.
+  # Duration: 150s (2.5 minutes)
+  # ===========================================================
+  electrical_room:
+    name: "Electrical Room Fire"
+    description: >
+      Electrical fault ignites the Electrical Room (R-106).
+      Fire spreads extremely fast due to cable insulation.
+      High temperatures quickly make the East Corridor unsafe,
+      potentially blocking Emergency Exit East (X-02). System
+      must reroute all Floor 1 East occupants to the Main
+      Entrance via the West Corridor.
+    duration_s: 150
+
+    initial_occupancy:
+      R-101: 4
+      R-102: 5
+      R-103: 12
+      R-104: 6
+      R-105: 2
+      R-106: 1
+      L-01: 3
+      C-01: 0
+      C-02: 0
+      S-01: 0
+      R-201: 3
+      R-202: 4
+      R-203: 5
+      R-204: 3
+      C-03: 0
+
+    events:
+      - tick: 3
+        type: "IGNITE"
+        zone_id: "R-106"
+        parameters:
+          intensity: 0.25
+
+      - tick: 50
+        type: "SENSOR_FAIL"
+        sensor_id: "T-R-106"
+        parameters:
+          failure_mode: "DEAD"
+
+    overrides:
+      fire_growth_rate: 0.06
+      smoke_diffusion_rate: 0.20
+
+  # ===========================================================
+  # SCENARIO 3: Flashover Event
+  # ===========================================================
+  # Tests: Slow buildup followed by sudden flashover,
+  #        cascading hazard escalation, rapid route changes.
+  # Duration: 180s (3 minutes)
+  # ===========================================================
+  flashover:
+    name: "Flashover Event"
+    description: >
+      Fire begins slowly in the Server Room (R-201) on Floor 2.
+      For the first 60 seconds, hazard gradually increases.
+      At approximately t=60s, flashover occurs — the room
+      instantly reaches maximum intensity, destroying all
+      sensors and cascading fire to adjacent zones. Tests the
+      system's ability to handle sudden hazard escalation and
+      sensor destruction.
+    duration_s: 180
+
+    initial_occupancy:
+      R-101: 3
+      R-102: 4
+      R-103: 8
+      R-104: 5
+      R-105: 2
+      R-106: 1
+      L-01: 4
+      C-01: 0
+      C-02: 0
+      S-01: 0
+      R-201: 2
+      R-202: 5
+      R-203: 4
+      R-204: 5
+      C-03: 0
+
+    events:
+      - tick: 5
+        type: "IGNITE"
+        zone_id: "R-201"
+        parameters:
+          intensity: 0.05
+
+      # Flashover is handled automatically by the fire model
+      # when intensity exceeds the flashover_threshold (0.8).
+      # The slow growth rate means it takes ~60 ticks to reach it.
+
+      - tick: 90
+        type: "COMM_FAIL"
+        zone_id: "R-201"
+        parameters: {}
+
+    overrides:
+      fire_growth_rate: 0.015
+      smoke_diffusion_rate: 0.12
+
+  # ===========================================================
+  # SCENARIO 4: Slow Smoldering Fire
+  # ===========================================================
+  # Tests: Smoke detector triggers before flame, delayed flame
+  #        detection, sensor cross-validation, gradual hazard
+  #        escalation.
+  # Duration: 180s (3 minutes)
+  # ===========================================================
+  slow_smoldering:
+    name: "Slow Smoldering Fire"
+    description: >
+      A smoldering fire starts in Office 103 (Conference Room).
+      Smoke builds slowly — the smoke detector triggers well
+      before temperature rises or flame is detected. Tests the
+      sensor fusion engine's ability to assess hazard from
+      partial sensor evidence and cross-validate conflicting
+      readings (high smoke, low temperature, no flame).
+    duration_s: 180
+
+    initial_occupancy:
+      R-101: 5
+      R-102: 4
+      R-103: 12
+      R-104: 6
+      R-105: 3
+      R-106: 1
+      L-01: 6
+      C-01: 0
+      C-02: 0
+      S-01: 0
+      R-201: 2
+      R-202: 5
+      R-203: 4
+      R-204: 3
+      C-03: 0
+
+    events:
+      - tick: 10
+        type: "IGNITE"
+        zone_id: "R-103"
+        parameters:
+          intensity: 0.03
+          smoldering: true
+
+      - tick: 80
+        type: "SENSOR_FAIL"
+        sensor_id: "FL-R-103"
+        parameters:
+          failure_mode: "STUCK_AT"
+
+    overrides:
+      fire_growth_rate: 0.008
+      smoke_diffusion_rate: 0.22
+
+  # ===========================================================
+  # SCENARIO 5: Blocked Exit
+  # ===========================================================
+  # Tests: Dynamic exit blocking, real-time route recalculation,
+  #        sensor failure, fail-safe activation, shelter-in-place.
+  # Duration: 180s (3 minutes)
+  # ===========================================================
+  blocked_exit:
+    name: "Blocked Exit with Sensor Failure"
+    description: >
+      Fire starts in Office 104 (R-104). At t=30s, structural
+      damage blocks the Main Entrance (X-01). At t=60s,
+      communication is lost with the East Corridor. The system
+      must dynamically reroute all occupants, activate fail-safe
+      for the blacked-out zone, and potentially issue
+      shelter-in-place directives if no safe route exists.
+    duration_s: 180
+
+    initial_occupancy:
+      R-101: 5
+      R-102: 4
+      R-103: 10
+      R-104: 7
+      R-105: 3
+      R-106: 1
+      L-01: 8
+      C-01: 0
+      C-02: 0
+      S-01: 0
+      R-201: 3
+      R-202: 4
+      R-203: 5
+      R-204: 4
+      C-03: 0
+
+    events:
+      - tick: 5
+        type: "IGNITE"
+        zone_id: "R-104"
+        parameters:
+          intensity: 0.20
+
+      - tick: 30
+        type: "BLOCK_EXIT"
+        zone_id: "X-01"
+        parameters:
+          reason: "Structural collapse near main entrance"
+
+      - tick: 60
+        type: "COMM_FAIL"
+        zone_id: "C-02"
+        parameters: {}
+
+      - tick: 75
+        type: "SENSOR_FAIL"
+        sensor_id: "T-R-104"
+        parameters:
+          failure_mode: "DEAD"
+
+      - tick: 75
+        type: "SENSOR_FAIL"
+        sensor_id: "SM-R-104"
+        parameters:
+          failure_mode: "DEAD"
+
+      - tick: 120
+        type: "COMM_RESTORE"
+        zone_id: "C-02"
+        parameters: {}
+
+    overrides:
+      fire_growth_rate: 0.04
+      smoke_diffusion_rate: 0.16

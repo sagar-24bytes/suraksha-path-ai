@@ -1,0 +1,389 @@
+# =============================================================
+# SurakshaPath AI — Building Layout Configuration
+# =============================================================
+# Defines the physical structure of the demo building:
+#   - Zones (rooms, corridors, stairwells, exits)
+#   - Edges (physical connections between zones)
+#   - Sensor placement per zone
+#
+# This building is a 2-floor office complex designed for
+# maximum demo impact with ~18 nodes and ~23 edges.
+#
+# Coordinate system:
+#   x: 0–15 (left to right)
+#   y: 0–10 (bottom to top)
+#   Used for Plotly floor plan rendering and A* heuristic.
+# =============================================================
+
+building:
+  name: "Honeywell Innovation Center"
+  floors: 2
+
+# =============================================================
+# ZONES
+# =============================================================
+# Each zone is a node in the building graph.
+#
+# Zone ID convention:
+#   R-NNN  = Room (floor N, room NN)
+#   C-NN   = Corridor
+#   L-NN   = Lobby
+#   S-NN   = Stairwell
+#   X-NN   = Exit
+#
+# sensors: list of sensor types installed in this zone.
+# The simulation engine will auto-generate sensor IDs as:
+#   T-{zone_id}  for TEMPERATURE
+#   SM-{zone_id} for SMOKE
+#   FL-{zone_id} for FLAME
+# =============================================================
+
+zones:
+  # =========================================================
+  # FLOOR 1 — Ground Level (12 zones)
+  # =========================================================
+
+  - id: "X-01"
+    name: "Main Entrance"
+    type: "EXIT"
+    floor: 1
+    x: 1.0
+    y: 5.0
+    capacity: 0
+    is_exit: true
+    sensors: ["TEMPERATURE", "SMOKE"]
+
+  - id: "L-01"
+    name: "Main Lobby"
+    type: "LOBBY"
+    floor: 1
+    x: 3.0
+    y: 5.0
+    capacity: 30
+    is_exit: false
+    sensors: ["TEMPERATURE", "SMOKE", "FLAME"]
+
+  - id: "R-101"
+    name: "Office 101"
+    type: "ROOM"
+    floor: 1
+    x: 4.5
+    y: 8.0
+    capacity: 6
+    is_exit: false
+    sensors: ["TEMPERATURE", "SMOKE", "FLAME"]
+
+  - id: "R-102"
+    name: "Office 102"
+    type: "ROOM"
+    floor: 1
+    x: 4.5
+    y: 2.0
+    capacity: 6
+    is_exit: false
+    sensors: ["TEMPERATURE", "SMOKE", "FLAME"]
+
+  - id: "C-01"
+    name: "West Corridor"
+    type: "CORRIDOR"
+    floor: 1
+    x: 6.5
+    y: 5.0
+    capacity: 20
+    is_exit: false
+    sensors: ["TEMPERATURE", "SMOKE"]
+
+  - id: "R-103"
+    name: "Conference Room"
+    type: "ROOM"
+    floor: 1
+    x: 7.5
+    y: 8.0
+    capacity: 15
+    is_exit: false
+    sensors: ["TEMPERATURE", "SMOKE", "FLAME"]
+
+  - id: "S-01"
+    name: "Central Stairwell"
+    type: "STAIRWELL"
+    floor: 1
+    x: 9.0
+    y: 5.0
+    capacity: 10
+    is_exit: false
+    sensors: ["TEMPERATURE", "SMOKE"]
+
+  - id: "C-02"
+    name: "East Corridor"
+    type: "CORRIDOR"
+    floor: 1
+    x: 11.0
+    y: 5.0
+    capacity: 20
+    is_exit: false
+    sensors: ["TEMPERATURE", "SMOKE"]
+
+  - id: "R-104"
+    name: "Office 104"
+    type: "ROOM"
+    floor: 1
+    x: 10.0
+    y: 8.0
+    capacity: 8
+    is_exit: false
+    sensors: ["TEMPERATURE", "SMOKE", "FLAME"]
+
+  - id: "R-105"
+    name: "Kitchen"
+    type: "ROOM"
+    floor: 1
+    x: 10.0
+    y: 2.0
+    capacity: 8
+    is_exit: false
+    sensors: ["TEMPERATURE", "SMOKE", "FLAME"]
+
+  - id: "R-106"
+    name: "Electrical Room"
+    type: "ROOM"
+    floor: 1
+    x: 13.0
+    y: 8.0
+    capacity: 3
+    is_exit: false
+    sensors: ["TEMPERATURE", "SMOKE", "FLAME"]
+
+  - id: "X-02"
+    name: "Emergency Exit East"
+    type: "EXIT"
+    floor: 1
+    x: 14.0
+    y: 5.0
+    capacity: 0
+    is_exit: true
+    sensors: ["TEMPERATURE", "SMOKE"]
+
+  # =========================================================
+  # FLOOR 2 — Upper Level (6 zones)
+  # =========================================================
+
+  - id: "C-03"
+    name: "Upper Corridor"
+    type: "CORRIDOR"
+    floor: 2
+    x: 9.0
+    y: 5.0
+    capacity: 20
+    is_exit: false
+    sensors: ["TEMPERATURE", "SMOKE"]
+
+  - id: "R-201"
+    name: "Server Room"
+    type: "ROOM"
+    floor: 2
+    x: 6.0
+    y: 8.0
+    capacity: 4
+    is_exit: false
+    sensors: ["TEMPERATURE", "SMOKE", "FLAME"]
+
+  - id: "R-202"
+    name: "Office 202"
+    type: "ROOM"
+    floor: 2
+    x: 6.0
+    y: 2.0
+    capacity: 6
+    is_exit: false
+    sensors: ["TEMPERATURE", "SMOKE", "FLAME"]
+
+  - id: "R-203"
+    name: "Office 203"
+    type: "ROOM"
+    floor: 2
+    x: 12.0
+    y: 8.0
+    capacity: 6
+    is_exit: false
+    sensors: ["TEMPERATURE", "SMOKE", "FLAME"]
+
+  - id: "R-204"
+    name: "Office 204"
+    type: "ROOM"
+    floor: 2
+    x: 12.0
+    y: 2.0
+    capacity: 6
+    is_exit: false
+    sensors: ["TEMPERATURE", "SMOKE", "FLAME"]
+
+  - id: "X-03"
+    name: "Roof Exit / External Staircase"
+    type: "EXIT"
+    floor: 2
+    x: 14.0
+    y: 5.0
+    capacity: 0
+    is_exit: true
+    sensors: ["TEMPERATURE", "SMOKE"]
+
+# =============================================================
+# EDGES
+# =============================================================
+# Each edge represents a physical walkable connection (door,
+# opening, or stairway) between two zones.
+#
+# All edges are BIDIRECTIONAL — the graph builder creates
+# both directions automatically.
+#
+# base_weight: traversal time in seconds under normal conditions.
+# has_fire_door: true if a fire-rated door separates the zones.
+# =============================================================
+
+edges:
+  # --- Floor 1: Lobby connections ---
+  - from: "X-01"
+    to: "L-01"
+    distance_m: 3.0
+    base_weight: 3.0
+    has_fire_door: false
+
+  - from: "L-01"
+    to: "C-01"
+    distance_m: 5.0
+    base_weight: 5.0
+    has_fire_door: false
+
+  - from: "L-01"
+    to: "R-101"
+    distance_m: 4.0
+    base_weight: 4.0
+    has_fire_door: false
+
+  # --- Floor 1: West Corridor connections ---
+  - from: "C-01"
+    to: "R-101"
+    distance_m: 3.0
+    base_weight: 3.0
+    has_fire_door: false
+
+  - from: "C-01"
+    to: "R-102"
+    distance_m: 3.0
+    base_weight: 3.0
+    has_fire_door: false
+
+  - from: "C-01"
+    to: "R-103"
+    distance_m: 3.0
+    base_weight: 3.0
+    has_fire_door: false
+
+  - from: "C-01"
+    to: "S-01"
+    distance_m: 4.0
+    base_weight: 4.0
+    has_fire_door: true
+
+  # --- Floor 1: Stairwell connections ---
+  - from: "S-01"
+    to: "C-02"
+    distance_m: 4.0
+    base_weight: 4.0
+    has_fire_door: true
+
+  # --- Floor 1: East Corridor connections ---
+  - from: "C-02"
+    to: "R-104"
+    distance_m: 3.0
+    base_weight: 3.0
+    has_fire_door: false
+
+  - from: "C-02"
+    to: "R-105"
+    distance_m: 3.0
+    base_weight: 3.0
+    has_fire_door: false
+
+  - from: "C-02"
+    to: "R-106"
+    distance_m: 5.0
+    base_weight: 5.0
+    has_fire_door: true
+
+  - from: "C-02"
+    to: "X-02"
+    distance_m: 5.0
+    base_weight: 5.0
+    has_fire_door: false
+
+  # --- Floor 1: Adjacent room connections ---
+  - from: "R-103"
+    to: "R-104"
+    distance_m: 4.0
+    base_weight: 4.0
+    has_fire_door: false
+
+  - from: "R-105"
+    to: "R-106"
+    distance_m: 4.0
+    base_weight: 4.0
+    has_fire_door: true
+
+  # --- Inter-floor: Stairwell ---
+  - from: "S-01"
+    to: "C-03"
+    distance_m: 6.0
+    base_weight: 9.0
+    has_fire_door: true
+
+  # --- Floor 2: Upper Corridor connections ---
+  - from: "C-03"
+    to: "R-201"
+    distance_m: 4.0
+    base_weight: 4.0
+    has_fire_door: false
+
+  - from: "C-03"
+    to: "R-202"
+    distance_m: 4.0
+    base_weight: 4.0
+    has_fire_door: false
+
+  - from: "C-03"
+    to: "R-203"
+    distance_m: 4.0
+    base_weight: 4.0
+    has_fire_door: false
+
+  - from: "C-03"
+    to: "R-204"
+    distance_m: 4.0
+    base_weight: 4.0
+    has_fire_door: false
+
+  - from: "C-03"
+    to: "X-03"
+    distance_m: 8.0
+    base_weight: 8.0
+    has_fire_door: false
+
+  # --- Floor 2: Adjacent room connections ---
+  - from: "R-201"
+    to: "R-202"
+    distance_m: 4.0
+    base_weight: 4.0
+    has_fire_door: false
+
+  - from: "R-203"
+    to: "R-204"
+    distance_m: 4.0
+    base_weight: 4.0
+    has_fire_door: false
+
+  # --- Floor 1 ↔ Floor 2: Additional cross-corridor ---
+  - from: "C-01"
+    to: "C-02"
+    distance_m: 7.0
+    base_weight: 7.0
+    has_fire_door: false

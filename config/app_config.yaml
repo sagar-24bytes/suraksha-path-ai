@@ -1,0 +1,33 @@
+# =============================================================
+# SurakshaPath AI — Application Configuration
+# =============================================================
+# Dashboard and simulation runtime settings.
+# Modify these to tune the demo experience.
+# =============================================================
+
+app:
+  title: "SurakshaPath AI"
+  subtitle: "Dynamic Fire Evacuation System"
+  version: "1.0.0"
+
+simulation:
+  # Tick interval in seconds at 1x speed.
+  # Lower = faster updates, but Streamlit may lag below 0.5s.
+  tick_interval_s: 1.0
+
+  # Default simulation speed multiplier (1x, 2x, 5x, 10x).
+  default_speed: 1
+
+  # Default scenario loaded on startup.
+  default_scenario: "kitchen_fire"
+
+dashboard:
+  # Number of past ticks to retain for trend charts.
+  max_history_ticks: 120
+
+  # Maximum alerts displayed in the live feed.
+  max_alerts_display: 50
+
+  # Floor plan dimensions (Plotly axis range).
+  floor_plan_x_range: [0, 15]
+  floor_plan_y_range: [0, 10]
