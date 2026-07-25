@@ -1,0 +1,129 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 510" width="100%" height="100%">
+  <defs>
+    <filter id="subtle-shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.06" />
+    </filter>
+  <style>
+  @keyframes flameFlicker {
+    0% { transform: scale(1.0); opacity: 0.9; }
+    50% { transform: scale(1.15); opacity: 1.0; }
+    100% { transform: scale(1.0); opacity: 0.9; }
+  }
+  @keyframes ledPulse {
+    0% { opacity: 0.30; }
+    50% { opacity: 1.0; }
+    100% { opacity: 0.30; }
+  }
+  @keyframes exitSafeGlow {
+    0% { stroke-width: 4; opacity: 0.85; }
+    50% { stroke-width: 7; opacity: 1.0; }
+    100% { stroke-width: 4; opacity: 0.85; }
+  }
+  @keyframes exitDangerFlash {
+    0% { stroke-width: 4; opacity: 1.0; }
+    50% { stroke-width: 6; opacity: 0.6; }
+    100% { stroke-width: 4; opacity: 1.0; }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .flame-anim {
+    animation: flameFlicker 1.2s ease-in-out infinite;
+    transform-origin: center;
+  }
+  .led-chevron {
+    animation: fadeIn 0.4s ease-out, ledPulse 1.8s ease-in-out infinite;
+  }
+  .exit-safe {
+    animation: exitSafeGlow 1.5s ease-in-out infinite;
+  }
+  .exit-danger {
+    animation: exitDangerFlash 0.8s ease-in-out infinite;
+  }
+  .occupant-entity {
+    animation: fadeIn 0.3s ease-out;
+  }
+</style><filter id="led-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter></defs>
+
+  <rect width="1000" height="510" fill="#ffffff" />
+  <rect x="20" y="15" width="960" height="480" fill="#f8fafc" stroke="#0f172a" stroke-width="6" rx="8" filter="url(#subtle-shadow)" />
+
+  <line x1="120" y1="15" x2="340" y2="15" stroke="#0284c7" stroke-width="6" stroke-linecap="round" />
+  <line x1="440" y1="15" x2="660" y2="15" stroke="#0284c7" stroke-width="6" stroke-linecap="round" />
+  <line x1="760" y1="15" x2="920" y2="15" stroke="#0284c7" stroke-width="6" stroke-linecap="round" />
+
+  
+  <g id="room-R-201">
+    <rect x="40" y="35" width="260" height="210" fill="#ffffff" stroke="#64748b" stroke-width="3" rx="6" />
+    <text x="170" y="90" font-family="'Segoe UI', system-ui, sans-serif" font-size="24" text-anchor="middle">💼</text>
+    <text x="170" y="122" font-family="'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#0f172a" text-anchor="middle">Executive Office 201</text>
+    <text x="170" y="148" font-family="'Segoe UI', system-ui, sans-serif" font-size="12" font-weight="600" fill="#64748b" text-anchor="middle">HR &amp; Operations Management</text>
+  </g>
+
+  
+  <g id="room-R-202">
+    <rect x="320" y="35" width="270" height="210" fill="#ffffff" stroke="#64748b" stroke-width="3" rx="6" />
+    <rect x="350" y="60" width="40" height="160" fill="#e0f2fe" stroke="#38bdf8" stroke-width="1.5" rx="2" />
+    <rect x="415" y="60" width="40" height="160" fill="#e0f2fe" stroke="#38bdf8" stroke-width="1.5" rx="2" />
+    <rect x="480" y="60" width="40" height="160" fill="#e0f2fe" stroke="#38bdf8" stroke-width="1.5" rx="2" />
+    <text x="455" y="100" font-family="'Segoe UI', system-ui, sans-serif" font-size="24" text-anchor="middle">🖥️</text>
+    <text x="455" y="132" font-family="'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#0369a1" text-anchor="middle">
+      <tspan x="455" dy="0">Server Hall &amp;</tspan>
+      <tspan x="455" dy="22">Data Center</tspan>
+    </text>
+    <text x="455" y="180" font-family="'Segoe UI', system-ui, sans-serif" font-size="12" font-weight="700" fill="#0284c7" text-anchor="middle">Critical Infrastructure (R-202)</text>
+  </g>
+
+  
+  <g id="room-R-203">
+    <rect x="610" y="35" width="190" height="210" fill="#ffffff" stroke="#64748b" stroke-width="3" rx="6" />
+    <text x="705" y="90" font-family="'Segoe UI', system-ui, sans-serif" font-size="24" text-anchor="middle">💻</text>
+    <text x="705" y="122" font-family="'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#0f172a" text-anchor="middle">Open Workspace 203</text>
+    <text x="705" y="148" font-family="'Segoe UI', system-ui, sans-serif" font-size="12" font-weight="600" fill="#64748b" text-anchor="middle">Engineering &amp; Support</text>
+  <text x="705.0" y="227.0" font-family="'Segoe UI', system-ui, sans-serif" font-size="12" font-weight="700" fill="#475569" text-anchor="middle">👥 5</text></g>
+
+  
+  <g id="room-R-204">
+    <rect x="820" y="35" width="140" height="210" fill="#ffffff" stroke="#64748b" stroke-width="3" rx="6" />
+    <text x="890" y="90" font-family="'Segoe UI', system-ui, sans-serif" font-size="24" text-anchor="middle">🧪</text>
+    <text x="890" y="122" font-family="'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="700" fill="#0f172a" text-anchor="middle">
+      <tspan x="890" dy="0">Research</tspan>
+      <tspan x="890" dy="20">Lab 204</tspan>
+    </text>
+    <text x="890" y="172" font-family="'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="600" fill="#64748b" text-anchor="middle">Testing &amp; Storage</text>
+  </g>
+
+  
+  <g id="room-C-02">
+    <rect x="40" y="260" width="550" height="115" fill="#ffffff" stroke="#64748b" stroke-width="3" rx="6" />
+    <text x="315" y="325" font-family="'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#1e293b" text-anchor="middle">West Operations Corridor (C-02)</text>
+  </g>
+
+  
+  <g id="room-C-03">
+    <rect x="610" y="260" width="190" height="115" fill="#ffffff" stroke="#64748b" stroke-width="3" rx="6" />
+    <text x="705" y="325" font-family="'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="700" fill="#1e293b" text-anchor="middle">East Corridor (C-03)</text>
+  </g>
+
+  
+  <g id="room-S-01">
+    <rect x="820" y="260" width="140" height="220" fill="#ffffff" stroke="#64748b" stroke-width="3" rx="6" />
+    <rect x="835" y="275" width="110" height="80" fill="#e2e8f0" stroke="#334155" stroke-width="2" rx="4" />
+    <text x="890" y="312" font-family="'Segoe UI', system-ui, sans-serif" font-size="20" text-anchor="middle">🛗</text>
+    <text x="890" y="338" font-family="'Segoe UI', system-ui, sans-serif" font-size="13" font-weight="700" fill="#0f172a" text-anchor="middle">LIFT 1</text>
+    <text x="890" y="395" font-family="'Segoe UI', system-ui, sans-serif" font-size="20" text-anchor="middle">🪜</text>
+    <line x1="835" y1="415" x2="945" y2="415" stroke="#64748b" stroke-width="2" />
+    <line x1="835" y1="432" x2="945" y2="432" stroke="#64748b" stroke-width="2" />
+    <line x1="835" y1="449" x2="945" y2="449" stroke="#64748b" stroke-width="2" />
+    <text x="890" y="470" font-family="'Segoe UI', system-ui, sans-serif" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle">STAIRS S1</text>
+  </g>
+
+  
+  <g id="room-X-03">
+    <rect x="610" y="390" width="190" height="90" fill="#dcfce7" stroke="#059669" stroke-width="4" rx="6" class="exit-safe" filter="url(#led-glow)" />
+    <text x="705" y="430" font-family="'Segoe UI', system-ui, sans-serif" font-size="20" text-anchor="middle">🚪</text>
+    <text x="705" y="456" font-family="'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="800" fill="#047857" text-anchor="middle">EXIT X-03 (Fire Escape)</text>
+  </g>
+<g transform="translate(845.8,366.0) rotate(-174.8)" class="led-chevron" style="animation-delay: 0s, 0.00s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(845.8,366.0) rotate(-174.8)" class="led-chevron" style="animation-delay: 0s, 0.00s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(801.5,361.9) rotate(-174.8)" class="led-chevron" style="animation-delay: 0s, 0.15s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(801.5,361.9) rotate(-174.8)" class="led-chevron" style="animation-delay: 0s, 0.15s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(757.3,357.9) rotate(-174.8)" class="led-chevron" style="animation-delay: 0s, 0.30s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(757.3,357.9) rotate(-174.8)" class="led-chevron" style="animation-delay: 0s, 0.30s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(713.1,353.8) rotate(-174.8)" class="led-chevron" style="animation-delay: 0s, 0.45s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(713.1,353.8) rotate(-174.8)" class="led-chevron" style="animation-delay: 0s, 0.45s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(668.8,349.8) rotate(-174.8)" class="led-chevron" style="animation-delay: 0s, 0.60s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(668.8,349.8) rotate(-174.8)" class="led-chevron" style="animation-delay: 0s, 0.60s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(624.6,345.8) rotate(-174.8)" class="led-chevron" style="animation-delay: 0s, 0.75s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(624.6,345.8) rotate(-174.8)" class="led-chevron" style="animation-delay: 0s, 0.75s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(580.4,341.7) rotate(-174.8)" class="led-chevron" style="animation-delay: 0s, 0.90s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(580.4,341.7) rotate(-174.8)" class="led-chevron" style="animation-delay: 0s, 0.90s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(536.2,337.7) rotate(-174.8)" class="led-chevron" style="animation-delay: 0s, 1.05s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(536.2,337.7) rotate(-174.8)" class="led-chevron" style="animation-delay: 0s, 1.05s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(491.9,333.7) rotate(-174.8)" class="led-chevron" style="animation-delay: 0s, 0.00s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(491.9,333.7) rotate(-174.8)" class="led-chevron" style="animation-delay: 0s, 0.00s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(447.7,329.6) rotate(-174.8)" class="led-chevron" style="animation-delay: 0s, 0.15s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(447.7,329.6) rotate(-174.8)" class="led-chevron" style="animation-delay: 0s, 0.15s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(403.5,325.6) rotate(-174.8)" class="led-chevron" style="animation-delay: 0s, 0.30s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(403.5,325.6) rotate(-174.8)" class="led-chevron" style="animation-delay: 0s, 0.30s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(359.2,321.5) rotate(-174.8)" class="led-chevron" style="animation-delay: 0s, 0.45s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(359.2,321.5) rotate(-174.8)" class="led-chevron" style="animation-delay: 0s, 0.45s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(705.0,356.7) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 0.60s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(705.0,356.7) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 0.60s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(705.0,395.8) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 0.75s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(705.0,395.8) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 0.75s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(211.2,153.7) rotate(18.4)" class="led-chevron" style="animation-delay: 0s, 0.90s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(211.2,153.7) rotate(18.4)" class="led-chevron" style="animation-delay: 0s, 0.90s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(252.3,167.3) rotate(18.4)" class="led-chevron" style="animation-delay: 0s, 1.05s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(252.3,167.3) rotate(18.4)" class="led-chevron" style="animation-delay: 0s, 1.05s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(293.5,181.0) rotate(18.4)" class="led-chevron" style="animation-delay: 0s, 0.00s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(293.5,181.0) rotate(18.4)" class="led-chevron" style="animation-delay: 0s, 0.00s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(334.6,194.6) rotate(18.4)" class="led-chevron" style="animation-delay: 0s, 0.15s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(334.6,194.6) rotate(18.4)" class="led-chevron" style="animation-delay: 0s, 0.15s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(375.8,208.3) rotate(18.4)" class="led-chevron" style="animation-delay: 0s, 0.30s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(375.8,208.3) rotate(18.4)" class="led-chevron" style="animation-delay: 0s, 0.30s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(416.9,221.9) rotate(18.4)" class="led-chevron" style="animation-delay: 0s, 0.45s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(416.9,221.9) rotate(18.4)" class="led-chevron" style="animation-delay: 0s, 0.45s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(458.1,235.6) rotate(18.4)" class="led-chevron" style="animation-delay: 0s, 0.60s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(458.1,235.6) rotate(18.4)" class="led-chevron" style="animation-delay: 0s, 0.60s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(499.2,249.2) rotate(18.4)" class="led-chevron" style="animation-delay: 0s, 0.75s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(499.2,249.2) rotate(18.4)" class="led-chevron" style="animation-delay: 0s, 0.75s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(540.4,262.9) rotate(18.4)" class="led-chevron" style="animation-delay: 0s, 0.90s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(540.4,262.9) rotate(18.4)" class="led-chevron" style="animation-delay: 0s, 0.90s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(581.5,276.5) rotate(18.4)" class="led-chevron" style="animation-delay: 0s, 1.05s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(581.5,276.5) rotate(18.4)" class="led-chevron" style="animation-delay: 0s, 1.05s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(622.7,290.2) rotate(18.4)" class="led-chevron" style="animation-delay: 0s, 0.00s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(622.7,290.2) rotate(18.4)" class="led-chevron" style="animation-delay: 0s, 0.00s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(663.8,303.8) rotate(18.4)" class="led-chevron" style="animation-delay: 0s, 0.15s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(663.8,303.8) rotate(18.4)" class="led-chevron" style="animation-delay: 0s, 0.15s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(705.0,356.7) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 0.30s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(705.0,356.7) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 0.30s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(705.0,395.8) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 0.45s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(705.0,395.8) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 0.45s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(490.7,165.4) rotate(35.4)" class="led-chevron" style="animation-delay: 0s, 0.60s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(490.7,165.4) rotate(35.4)" class="led-chevron" style="animation-delay: 0s, 0.60s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(526.4,190.7) rotate(35.4)" class="led-chevron" style="animation-delay: 0s, 0.75s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(526.4,190.7) rotate(35.4)" class="led-chevron" style="animation-delay: 0s, 0.75s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(562.1,216.1) rotate(35.4)" class="led-chevron" style="animation-delay: 0s, 0.90s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(562.1,216.1) rotate(35.4)" class="led-chevron" style="animation-delay: 0s, 0.90s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(597.9,241.4) rotate(35.4)" class="led-chevron" style="animation-delay: 0s, 1.05s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(597.9,241.4) rotate(35.4)" class="led-chevron" style="animation-delay: 0s, 1.05s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(633.6,266.8) rotate(35.4)" class="led-chevron" style="animation-delay: 0s, 0.00s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(633.6,266.8) rotate(35.4)" class="led-chevron" style="animation-delay: 0s, 0.00s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(669.3,292.1) rotate(35.4)" class="led-chevron" style="animation-delay: 0s, 0.15s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(669.3,292.1) rotate(35.4)" class="led-chevron" style="animation-delay: 0s, 0.15s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(705.0,356.7) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 0.30s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(705.0,356.7) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 0.30s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(705.0,395.8) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 0.45s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(705.0,395.8) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 0.45s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(705.0,184.4) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 0.60s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(705.0,184.4) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 0.60s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(705.0,228.8) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 0.75s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(705.0,228.8) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 0.75s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(705.0,273.1) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 0.90s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(705.0,273.1) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 0.90s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(705.0,356.7) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 1.05s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(705.0,356.7) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 1.05s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(705.0,395.8) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 0.00s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(705.0,395.8) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 0.00s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(859.2,169.6) rotate(136.2)" class="led-chevron" style="animation-delay: 0s, 0.15s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(859.2,169.6) rotate(136.2)" class="led-chevron" style="animation-delay: 0s, 0.15s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(828.3,199.2) rotate(136.2)" class="led-chevron" style="animation-delay: 0s, 0.30s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(828.3,199.2) rotate(136.2)" class="led-chevron" style="animation-delay: 0s, 0.30s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(797.5,228.8) rotate(136.2)" class="led-chevron" style="animation-delay: 0s, 0.45s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(797.5,228.8) rotate(136.2)" class="led-chevron" style="animation-delay: 0s, 0.45s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(766.7,258.3) rotate(136.2)" class="led-chevron" style="animation-delay: 0s, 0.60s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(766.7,258.3) rotate(136.2)" class="led-chevron" style="animation-delay: 0s, 0.60s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(735.8,287.9) rotate(136.2)" class="led-chevron" style="animation-delay: 0s, 0.75s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(735.8,287.9) rotate(136.2)" class="led-chevron" style="animation-delay: 0s, 0.75s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(705.0,356.7) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 0.90s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(705.0,356.7) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 0.90s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g><g transform="translate(705.0,395.8) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 1.05s;"><polygon points="-5,-6 10,0 -5,6" fill="#10b981" opacity="0.7" filter="url(#led-glow)" /></g><g transform="translate(705.0,395.8) rotate(90.0)" class="led-chevron" style="animation-delay: 0s, 1.05s;"><polygon points="-3,-4 7,0 -3,4" fill="#a7f3d0" opacity="0.9" /></g></svg>

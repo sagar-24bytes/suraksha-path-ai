@@ -7,38 +7,45 @@
   <style>
   @keyframes flameFlicker {
     0% { transform: scale(1.0); opacity: 0.9; }
-    50% { transform: scale(1.18); opacity: 1.0; }
+    50% { transform: scale(1.15); opacity: 1.0; }
     100% { transform: scale(1.0); opacity: 0.9; }
   }
-  @keyframes ledFlow {
-    from { stroke-dashoffset: 28; }
-    to { stroke-dashoffset: 0; }
+  @keyframes ledPulse {
+    0% { opacity: 0.30; }
+    50% { opacity: 1.0; }
+    100% { opacity: 0.30; }
   }
-  @keyframes routeGlow {
-    0% { stroke-opacity: 0.75; stroke-width: 6.5px; }
-    50% { stroke-opacity: 1.0; stroke-width: 8.5px; }
-    100% { stroke-opacity: 0.75; stroke-width: 6.5px; }
+  @keyframes exitSafeGlow {
+    0% { stroke-width: 4; opacity: 0.85; }
+    50% { stroke-width: 7; opacity: 1.0; }
+    100% { stroke-width: 4; opacity: 0.85; }
   }
-  @keyframes exitPulse {
-    0% { stroke: #10b981; stroke-width: 5px; }
-    50% { stroke: #059669; stroke-width: 8px; }
-    100% { stroke: #10b981; stroke-width: 5px; }
+  @keyframes exitDangerFlash {
+    0% { stroke-width: 4; opacity: 1.0; }
+    50% { stroke-width: 6; opacity: 0.6; }
+    100% { stroke-width: 4; opacity: 1.0; }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
   .flame-anim {
     animation: flameFlicker 1.2s ease-in-out infinite;
     transform-origin: center;
   }
-  .led-strip-anim {
-    stroke-dasharray: 8 6;
-    animation: ledFlow 0.7s linear infinite;
+  .led-chevron {
+    animation: fadeIn 0.4s ease-out, ledPulse 1.8s ease-in-out infinite;
   }
-  .route-line-anim {
-    animation: routeGlow 1.8s ease-in-out infinite;
+  .exit-safe {
+    animation: exitSafeGlow 1.5s ease-in-out infinite;
   }
-  .target-exit-anim {
-    animation: exitPulse 1.4s ease-in-out infinite;
+  .exit-danger {
+    animation: exitDangerFlash 0.8s ease-in-out infinite;
   }
-</style></defs>
+  .occupant-entity {
+    animation: fadeIn 0.3s ease-out;
+  }
+</style><filter id="led-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter></defs>
 
   
   <rect width="1000" height="510" fill="#ffffff" />
@@ -66,7 +73,6 @@
   <g id="room-R-102">
     <rect x="370" y="35" width="250" height="210" fill="#fee2e2" stroke="#dc2626" stroke-width="5" rx="6" />
     <rect x="435" y="165" width="120" height="45" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2" rx="15" />
-    <text x="495" y="90" font-family="'Segoe UI', system-ui, sans-serif" font-size="24" text-anchor="middle">👥</text>
     <text x="495" y="122" font-family="'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#0f172a" text-anchor="middle">Meeting Room Alpha</text>
     <text x="495" y="148" font-family="'Segoe UI', system-ui, sans-serif" font-size="12" font-weight="600" fill="#64748b" text-anchor="middle">12-Seat Conference Room</text>
   <text x="495.0" y="73.0" font-family="'Segoe UI', system-ui, sans-serif" font-size="26" text-anchor="middle" class="flame-anim">🔥</text><rect x="370.0" y="35.0" width="250.0" height="210.0" fill="rgba(71, 85, 105, 0.62)" rx="6" pointer-events="none" /></g>
@@ -80,7 +86,7 @@
       <tspan x="720" dy="22">&amp; Kitchen</tspan>
     </text>
     <text x="720" y="172" font-family="'Segoe UI', system-ui, sans-serif" font-size="12" font-weight="600" fill="#64748b" text-anchor="middle">Staff Refreshments</text>
-  <text x="720.0" y="73.0" font-family="'Segoe UI', system-ui, sans-serif" font-size="26" text-anchor="middle" class="flame-anim">🔥</text><rect x="640.0" y="35.0" width="160.0" height="210.0" fill="rgba(71, 85, 105, 0.61)" rx="6" pointer-events="none" /></g>
+  <text x="720.0" y="73.0" font-family="'Segoe UI', system-ui, sans-serif" font-size="26" text-anchor="middle" class="flame-anim">🔥</text><rect x="640.0" y="35.0" width="160.0" height="210.0" fill="rgba(71, 85, 105, 0.62)" rx="6" pointer-events="none" /></g>
 
   
   <g id="room-R-106">
@@ -91,7 +97,7 @@
       <tspan x="890" dy="20">&amp; HVAC</tspan>
     </text>
     <text x="890" y="172" font-family="'Segoe UI', system-ui, sans-serif" font-size="11" font-weight="700" fill="#b45309" text-anchor="middle">Mains Utility</text>
-  <text x="890.0" y="73.0" font-family="'Segoe UI', system-ui, sans-serif" font-size="26" text-anchor="middle" class="flame-anim">🔥</text><rect x="820.0" y="35.0" width="140.0" height="210.0" fill="rgba(71, 85, 105, 0.62)" rx="6" pointer-events="none" /></g>
+  <text x="890.0" y="73.0" font-family="'Segoe UI', system-ui, sans-serif" font-size="26" text-anchor="middle" class="flame-anim">🔥</text><rect x="820.0" y="35.0" width="140.0" height="210.0" fill="rgba(71, 85, 105, 0.61)" rx="6" pointer-events="none" /></g>
 
   
   <g id="room-C-01">
@@ -104,7 +110,7 @@
     <rect x="40" y="390" width="310" height="90" fill="#fee2e2" stroke="#dc2626" stroke-width="5" rx="6" />
     <text x="195" y="430" font-family="'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="700" fill="#0f172a" text-anchor="middle">Receptionist Office (R-101)</text>
     <text x="195" y="454" font-family="'Segoe UI', system-ui, sans-serif" font-size="12" font-weight="600" fill="#64748b" text-anchor="middle">Administrative Staff</text>
-  <text x="195.0" y="428.0" font-family="'Segoe UI', system-ui, sans-serif" font-size="26" text-anchor="middle" class="flame-anim">🔥</text><rect x="40.0" y="390.0" width="310.0" height="90.0" fill="rgba(71, 85, 105, 0.62)" rx="6" pointer-events="none" /></g>
+  <text x="195.0" y="428.0" font-family="'Segoe UI', system-ui, sans-serif" font-size="26" text-anchor="middle" class="flame-anim">🔥</text><rect x="40.0" y="390.0" width="310.0" height="90.0" fill="rgba(71, 85, 105, 0.61)" rx="6" pointer-events="none" /></g>
 
   
   <g id="room-S-01">
@@ -123,15 +129,15 @@
 
   
   <g id="room-X-01">
-    <rect x="370" y="390" width="210" height="90" fill="#fee2e2" stroke="#2563eb" stroke-width="5" rx="6" class="target-exit-anim" />
+    <rect x="370" y="390" width="210" height="90" fill="#fef2f2" stroke="#ef4444" stroke-width="4" rx="6" class="exit-danger" />
     <text x="475" y="430" font-family="'Segoe UI', system-ui, sans-serif" font-size="20" text-anchor="middle">🚪</text>
     <text x="475" y="456" font-family="'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="800" fill="#047857" text-anchor="middle">EXIT X-01 (Main)</text>
   <text x="475.0" y="428.0" font-family="'Segoe UI', system-ui, sans-serif" font-size="26" text-anchor="middle" class="flame-anim">🔥</text><rect x="370.0" y="390.0" width="210.0" height="90.0" fill="rgba(71, 85, 105, 0.62)" rx="6" pointer-events="none" /></g>
 
   
   <g id="room-X-02">
-    <rect x="600" y="390" width="200" height="90" fill="#fee2e2" stroke="#dc2626" stroke-width="5" rx="6" class="target-exit-anim" />
+    <rect x="600" y="390" width="200" height="90" fill="#fef2f2" stroke="#ef4444" stroke-width="4" rx="6" class="exit-danger" />
     <text x="700" y="430" font-family="'Segoe UI', system-ui, sans-serif" font-size="20" text-anchor="middle">🚪</text>
     <text x="700" y="456" font-family="'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="800" fill="#047857" text-anchor="middle">EXIT X-02 (East)</text>
   <text x="700.0" y="428.0" font-family="'Segoe UI', system-ui, sans-serif" font-size="26" text-anchor="middle" class="flame-anim">🔥</text><rect x="600.0" y="390.0" width="200.0" height="90.0" fill="rgba(71, 85, 105, 0.62)" rx="6" pointer-events="none" /></g>
-<path d="M 195.0 140.0 L 475.0 435.0" stroke="#10b981" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" class="route-line-anim" /><path d="M 195.0 140.0 L 475.0 435.0" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" class="led-strip-anim" /><text x="335.0" y="293.5" font-family="'Segoe UI', system-ui, sans-serif" font-size="20" font-weight="800" fill="#047857" text-anchor="middle">➔</text><text x="391.0" y="351.5" font-family="'Segoe UI', system-ui, sans-serif" font-size="22" text-anchor="middle">👤</text><path d="M 195.0 435.0 L 195.0 140.0 L 475.0 435.0" stroke="#10b981" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" class="route-line-anim" /><path d="M 195.0 435.0 L 195.0 140.0 L 475.0 435.0" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" class="led-strip-anim" /><text x="195.0" y="293.5" font-family="'Segoe UI', system-ui, sans-serif" font-size="20" font-weight="800" fill="#047857" text-anchor="middle">➔</text><text x="335.0" y="293.5" font-family="'Segoe UI', system-ui, sans-serif" font-size="20" font-weight="800" fill="#047857" text-anchor="middle">➔</text><text x="307.0" y="263.0" font-family="'Segoe UI', system-ui, sans-serif" font-size="22" text-anchor="middle">👤</text><path d="M 495.0 140.0 L 420.0 317.5 L 195.0 140.0 L 475.0 435.0" stroke="#10b981" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" class="route-line-anim" /><path d="M 495.0 140.0 L 420.0 317.5 L 195.0 140.0 L 475.0 435.0" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" class="led-strip-anim" /><text x="457.5" y="234.8" font-family="'Segoe UI', system-ui, sans-serif" font-size="20" font-weight="800" fill="#047857" text-anchor="middle">➔</text><text x="307.5" y="234.8" font-family="'Segoe UI', system-ui, sans-serif" font-size="20" font-weight="800" fill="#047857" text-anchor="middle">➔</text><text x="335.0" y="293.5" font-family="'Segoe UI', system-ui, sans-serif" font-size="20" font-weight="800" fill="#047857" text-anchor="middle">➔</text><path d="M 420.0 317.5 L 195.0 140.0 L 475.0 435.0" stroke="#10b981" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" class="route-line-anim" /><path d="M 420.0 317.5 L 195.0 140.0 L 475.0 435.0" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" class="led-strip-anim" /><text x="307.5" y="234.8" font-family="'Segoe UI', system-ui, sans-serif" font-size="20" font-weight="800" fill="#047857" text-anchor="middle">➔</text><text x="335.0" y="293.5" font-family="'Segoe UI', system-ui, sans-serif" font-size="20" font-weight="800" fill="#047857" text-anchor="middle">➔</text><path d="M 890.0 370.0 L 700.0 435.0" stroke="#10b981" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" class="route-line-anim" /><path d="M 890.0 370.0 L 700.0 435.0" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" class="led-strip-anim" /><text x="795.0" y="408.5" font-family="'Segoe UI', system-ui, sans-serif" font-size="20" font-weight="800" fill="#047857" text-anchor="middle">➔</text><path d="M 720.0 140.0 L 700.0 435.0" stroke="#10b981" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" class="route-line-anim" /><path d="M 720.0 140.0 L 700.0 435.0" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" class="led-strip-anim" /><text x="710.0" y="293.5" font-family="'Segoe UI', system-ui, sans-serif" font-size="20" font-weight="800" fill="#047857" text-anchor="middle">➔</text><text x="706.0" y="351.5" font-family="'Segoe UI', system-ui, sans-serif" font-size="22" text-anchor="middle">👤</text><path d="M 890.0 140.0 L 700.0 435.0" stroke="#10b981" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" class="route-line-anim" /><path d="M 890.0 140.0 L 700.0 435.0" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" class="led-strip-anim" /><text x="795.0" y="293.5" font-family="'Segoe UI', system-ui, sans-serif" font-size="20" font-weight="800" fill="#047857" text-anchor="middle">➔</text></svg>
+</svg>
