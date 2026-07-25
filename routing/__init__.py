@@ -1,20 +1,25 @@
 """
 SurakshaPath AI — Shared Evacuation Routing Subsystem Package.
 
-Provides structural topology graphs, dynamic edge weight interfaces, hazard model snapshot
-contracts, and high-level route manager abstractions.
+Provides structural topology graphs, dynamic edge weight calculation, hazard model snapshot
+contracts, Dijkstra shortest-path pathfinder, self-invalidating route cache, and high-level
+route manager orchestrator.
 
 Exports:
   - Node, Edge, BuildingGraph: Structural graph topology data structures
-  - BaseWeightProvider, EdgeWeightCalculator: Edge weight interface contracts
-  - ZoneRisk, HazardSnapshot, HazardProvider: Hazard model contracts & provider interface
-  - RouteRequest, RouteResult, RouteManager: Evacuation routing interface contracts
+  - BaseWeightProvider, EdgeWeightCalculator, DynamicEdgeWeightCalculator, INFINITY_WEIGHT
+  - ZoneRisk, HazardSnapshot, HazardProvider, TelemetryHazardProvider
+  - RouteRequest, RouteResult, RouteManager, DefaultRouteManager
+  - DijkstraPathfinder: Deterministic Dijkstra shortest path engine
+  - RouteCache: Self-invalidating route cache
 """
 
 from routing.graph import Node, Edge, BuildingGraph
-from routing.edge_weight import BaseWeightProvider, EdgeWeightCalculator
-from routing.hazard_model import ZoneRisk, HazardSnapshot, HazardProvider
-from routing.path_manager import RouteRequest, RouteResult, RouteManager
+from routing.edge_weight import BaseWeightProvider, EdgeWeightCalculator, DynamicEdgeWeightCalculator, INFINITY_WEIGHT
+from routing.hazard_model import ZoneRisk, HazardSnapshot, HazardProvider, TelemetryHazardProvider
+from routing.path_manager import RouteRequest, RouteResult, RouteManager, DefaultRouteManager
+from routing.dijkstra import DijkstraPathfinder
+from routing.route_cache import RouteCache
 
 __all__ = [
     "Node",
@@ -22,10 +27,16 @@ __all__ = [
     "BuildingGraph",
     "BaseWeightProvider",
     "EdgeWeightCalculator",
+    "DynamicEdgeWeightCalculator",
+    "INFINITY_WEIGHT",
     "ZoneRisk",
     "HazardSnapshot",
     "HazardProvider",
+    "TelemetryHazardProvider",
     "RouteRequest",
     "RouteResult",
     "RouteManager",
+    "DefaultRouteManager",
+    "DijkstraPathfinder",
+    "RouteCache",
 ]
