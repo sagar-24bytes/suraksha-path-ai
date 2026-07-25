@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 510" width="100%" height="100%">
+  <defs>
+    <filter id="subtle-shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="1000" height="510" fill="#ffffff"/>
+  <rect x="20" y="15" width="960" height="480" fill="#f8fafc" stroke="#0f172a" stroke-width="6" rx="8" filter="url(#subtle-shadow)"/>
+
+  <line x1="120" y1="15" x2="340" y2="15" stroke="#0284c7" stroke-width="6" stroke-linecap="round"/>
+  <line x1="440" y1="15" x2="660" y2="15" stroke="#0284c7" stroke-width="6" stroke-linecap="round"/>
+  <line x1="760" y1="15" x2="920" y2="15" stroke="#0284c7" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- HVAC & Solar Power Room (R-301) -->
+  <g id="room-R-301">
+    <rect x="40" y="35" width="270" height="210" fill="#ffffff" stroke="#64748b" stroke-width="3" rx="6"/>
+    <text x="175" y="90" font-family="'Segoe UI', system-ui, sans-serif" font-size="24" text-anchor="middle">⚙️</text>
+    <text x="175" y="122" font-family="'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#0f172a" text-anchor="middle">HVAC &amp; Solar Power</text>
+    <text x="175" y="148" font-family="'Segoe UI', system-ui, sans-serif" font-size="12" font-weight="600" fill="#64748b" text-anchor="middle">Rooftop Energy &amp; Mains</text>
+  </g>
+
+  <!-- Executive Lounge & Archive (R-302) -->
+  <g id="room-R-302">
+    <rect x="330" y="35" width="260" height="210" fill="#ffffff" stroke="#64748b" stroke-width="3" rx="6"/>
+    <text x="460" y="90" font-family="'Segoe UI', system-ui, sans-serif" font-size="24" text-anchor="middle">🛋️</text>
+    <text x="460" y="122" font-family="'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#0f172a" text-anchor="middle">Executive Lounge</text>
+    <text x="460" y="148" font-family="'Segoe UI', system-ui, sans-serif" font-size="12" font-weight="600" fill="#64748b" text-anchor="middle">Rooftop Terrace &amp; Archive</text>
+  </g>
+
+  <!-- Executive Conference Hall (R-303) -->
+  <g id="room-R-303">
+    <rect x="610" y="35" width="350" height="210" fill="#f8fafc" stroke="#334155" stroke-width="3" rx="6"/>
+    <ellipse cx="785" cy="160" rx="100" ry="32" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="2"/>
+    <text x="785" y="90" font-family="'Segoe UI', system-ui, sans-serif" font-size="24" text-anchor="middle">👥</text>
+    <text x="785" y="122" font-family="'Segoe UI', system-ui, sans-serif" font-size="17" font-weight="700" fill="#0f172a" text-anchor="middle">Executive Conference Hall</text>
+    <text x="785" y="148" font-family="'Segoe UI', system-ui, sans-serif" font-size="12" font-weight="600" fill="#64748b" text-anchor="middle">Boardroom &amp; Training Center</text>
+  </g>
+
+  <!-- Rooftop Skywalk Corridor (C-03) -->
+  <g id="room-C-03">
+    <rect x="40" y="260" width="760" height="115" fill="#f1f5f9" stroke="#64748b" stroke-width="3" rx="6"/>
+    <text x="420" y="325" font-family="'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="700" fill="#1e293b" text-anchor="middle">Rooftop Skywalk Corridor (C-03)</text>
+  </g>
+
+  <!-- Stairwell & Lift Shaft S1 (S-01) -->
+  <g id="room-S-01">
+    <rect x="820" y="260" width="140" height="220" fill="#f1f5f9" stroke="#64748b" stroke-width="3" rx="6"/>
+    <rect x="835" y="275" width="110" height="80" fill="#e2e8f0" stroke="#334155" stroke-width="2" rx="4"/>
+    <text x="890" y="312" font-family="'Segoe UI', system-ui, sans-serif" font-size="20" text-anchor="middle">🛗</text>
+    <text x="890" y="338" font-family="'Segoe UI', system-ui, sans-serif" font-size="13" font-weight="700" fill="#0f172a" text-anchor="middle">LIFT 1</text>
+    <text x="890" y="395" font-family="'Segoe UI', system-ui, sans-serif" font-size="20" text-anchor="middle">🪜</text>
+    <line x1="835" y1="415" x2="945" y2="415" stroke="#64748b" stroke-width="2"/>
+    <line x1="835" y1="432" x2="945" y2="432" stroke="#64748b" stroke-width="2"/>
+    <line x1="835" y1="449" x2="945" y2="449" stroke="#64748b" stroke-width="2"/>
+    <text x="890" y="470" font-family="'Segoe UI', system-ui, sans-serif" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle">STAIRS S1</text>
+  </g>
+
+  <!-- Helipad Exit X-03 -->
+  <g id="room-X-03">
+    <rect x="330" y="390" width="470" height="90" fill="#dcfce7" stroke="#059669" stroke-width="4" rx="6"/>
+    <text x="565" y="430" font-family="'Segoe UI', system-ui, sans-serif" font-size="20" text-anchor="middle">🚪</text>
+    <text x="565" y="456" font-family="'Segoe UI', system-ui, sans-serif" font-size="15" font-weight="800" fill="#047857" text-anchor="middle">EXIT X-03 (Helipad &amp; Roof Access)</text>
+  </g>
+</svg>

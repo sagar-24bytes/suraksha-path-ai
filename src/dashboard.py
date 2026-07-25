@@ -4,15 +4,13 @@ SurakshaPath AI — Fire Commander Dashboard Entry Point.
 Primary operator command-center interface coordinating all 5 subsystems:
   Digital Twin Simulation → Transport Layer → Dynamic Routing → MicroPython Firmware → Fire Commander UI
 
-Features:
-  - One-click application startup (streamlit run src/dashboard.py)
-  - Custom dark theme styling (#0f0f1a)
-  - Plotly interactive floor plan with smooth HSL hazard gradients & dynamic route arrows
-  - Mandatory Explainability Panel (w_i · c_i · t_i formula breakdown & reroute reasoning)
-  - Real-time emergency alerts feed
-  - 5-aspect subsystem health matrix (Simulation, Comm, Firmware, Routing, Dashboard)
-  - Live telemetry table detailing all 18 building zones
-  - Interactive scenario controls (Kitchen Fire, Electrical Room, Flashover, Blocked Exit, etc.)
+Modern Emergency Command Center UI (Light Theme & Hero Building Focus):
+  - SCADA industrial building management aesthetic (#f8f9fa background, white cards #ffffff)
+  - Architectural commercial building floor plan occupying 85-90% of center panel width via native st.image()
+  - Top SCADA KPI Cards (Fire zones, Smoke zones, Active occupants, Safe exits, Online nodes, Sim clock)
+  - Chronological Event Timeline & Alerts Feed
+  - Two-tier Decision Explainability Panel (Operator summary + Expandable evidence fusion math)
+  - 5-aspect subsystem health matrix & Live 18-zone telemetry table
 """
 
 import sys
@@ -31,43 +29,54 @@ import streamlit as st
 from system_coordinator import SystemCoordinator
 from simulation.scenario_engine import BUILTIN_SCENARIOS
 from src.dashboard_components import (
-    render_floor_plan,
+    render_commercial_floor_plan,
+    render_event_timeline,
     render_explainability_panel,
     render_telemetry_panel,
     render_alerts_feed,
+    render_top_kpi_cards,
     render_health_panel,
     render_sidebar_controls,
 )
 
 # -------------------------------------------------------------
-# Streamlit Page Setup & Custom CSS Styling
+# Streamlit Page Setup & Custom SCADA Styling
 # -------------------------------------------------------------
 st.set_page_config(
     page_title="SurakshaPath AI — Fire Commander Dashboard",
-    page_icon="🔥",
+    page_icon="🏢",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
-# Custom Dark Command Center CSS
+# Injected SCADA Styling & Layout Cleaners
 st.markdown(
     """
     <style>
     .stApp {
-        background-color: #0f0f1a;
-        color: #e0e0e0;
+        background-color: #f8f9fa;
+        color: #2c3e50;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     .stSidebar {
-        background-color: #161625 !important;
-    }
-    .metric-card {
-        background-color: #1a1a2e;
-        border-radius: 8px;
-        padding: 12px;
-        border: 1px solid #2a2a40;
+        background-color: #ffffff !important;
+        border-right: 1px solid #e9ecef;
     }
     div[data-testid="stMetricValue"] {
-        font-size: 1.3rem !important;
+        font-size: 1.4rem !important;
+        color: #2c3e50;
+    }
+    div[data-testid="stMetricLabel"] {
+        color: #7f8c8d !important;
+        font-weight: 600;
+    }
+    /* Hide standalone floating code blocks in the main layout to prevent stray code artifacts */
+    div[data-testid="stCodeBlock"] {
+        display: none !important;
+    }
+    /* Preserve code blocks inside expander panels for mathematical explainability formulas */
+    div[data-testid="stExpander"] div[data-testid="stCodeBlock"] {
+        display: block !important;
     }
     </style>
     """,
@@ -116,52 +125,54 @@ if user_controls["step_clicked"]:
     coordinator.step()
 
 # -------------------------------------------------------------
-# Header Bar & Clock
+# Top Header & SCADA KPI Cards Row
 # -------------------------------------------------------------
-head_col1, head_col2, head_col3 = st.columns([3, 1, 1])
-
+head_col1, head_col2 = st.columns([3, 1])
 with head_col1:
-    st.title("🔥 SurakshaPath AI — Fire Commander Dashboard")
-    st.caption(f"Building: **{coordinator.config.building.name}** | Scenario: **{coordinator.scenario_key.upper().replace('_', ' ')}**")
+    st.title("🏢 SurakshaPath AI — Fire Commander Operations Dashboard")
+    st.caption(f"Commercial Building: **{coordinator.config.building.name}** &nbsp;|&nbsp; Scenario Story: **{coordinator.scenario_key.upper().replace('_', ' ')}**")
 
 with head_col2:
-    st.metric(label="Simulation Clock", value=f"T + {coordinator.current_tick:02d}:00s")
+    if st.session_state.is_playing:
+        st.success("🟢 LIVE RUNNING")
+    else:
+        st.info("⏸️ SIMULATION PAUSED")
 
-with head_col3:
-    status_str = "🟢 RUNNING" if st.session_state.is_playing else "⏸️ PAUSED"
-    st.metric(label="System Status", value=status_str)
+# Render Top KPI Cards Row
+render_top_kpi_cards(
+    telemetry=coordinator.latest_telemetry,
+    routes=coordinator.latest_routes,
+    current_tick=coordinator.current_tick,
+)
 
 st.divider()
 
 # -------------------------------------------------------------
-# 5-Aspect Subsystem Health Matrix Panel
+# Main Operations Center Layout (Center Hero Building vs Right Timeline)
+# 85-90% Width Split for Commercial Building Floor Plan
 # -------------------------------------------------------------
-render_health_panel(coordinator.get_system_health())
-st.divider()
+center_col, right_col = st.columns([3.8, 1.0])
 
-# -------------------------------------------------------------
-# Main Visualization & Emergency Alerts Feed (2 Columns)
-# -------------------------------------------------------------
-vis_col, alert_col = st.columns([3, 2])
-
-with vis_col:
-    st.subheader(f"🗺️ Floor Plan — Floor {user_controls['selected_floor']} (Dynamic Route Overlays)")
-    fig = render_floor_plan(
+with center_col:
+    # Render SVG architectural commercial floor plan via native st.image() (Phase 8.4 SCADA Mode)
+    render_commercial_floor_plan(
         graph=coordinator.graph,
         telemetry=coordinator.latest_telemetry,
         routes=coordinator.latest_routes,
         selected_floor=user_controls["selected_floor"],
         selected_zone_id=user_controls["selected_zone"],
+        current_tick=coordinator.current_tick,
     )
-    st.plotly_chart(fig, use_container_width=True)
 
-with alert_col:
+with right_col:
+    render_event_timeline(coordinator.alerts_history)
+    st.divider()
     render_alerts_feed(coordinator.alerts_history)
 
 st.divider()
 
 # -------------------------------------------------------------
-# Mandatory Explainability Panel (XAI Evidence Breakdown)
+# Operator Explainability Panel & Subsystem Health
 # -------------------------------------------------------------
 render_explainability_panel(
     selected_zone_id=user_controls["selected_zone"],
@@ -172,8 +183,11 @@ render_explainability_panel(
 st.divider()
 
 # -------------------------------------------------------------
-# Live Telemetry Panel Table
+# 5-Aspect Subsystem Health Matrix & Live Telemetry Table
 # -------------------------------------------------------------
+render_health_panel(coordinator.get_system_health())
+st.divider()
+
 render_telemetry_panel(
     telemetry=coordinator.latest_telemetry,
     routes=coordinator.latest_routes,
