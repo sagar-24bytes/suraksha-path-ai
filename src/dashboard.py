@@ -314,6 +314,6 @@ render_telemetry_panel(
 # Real-Time Play Execution Loop
 # -------------------------------------------------------------
 if st.session_state.is_playing:
-    time.sleep(1.0)
+    time.sleep(1.5)
     coordinator.step()
     st.rerun()

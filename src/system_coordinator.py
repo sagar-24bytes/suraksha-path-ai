@@ -84,6 +84,7 @@ class SystemCoordinator:
         self.latest_telemetry: Dict[str, TelemetryPacket] = {}
         self.latest_routes: Dict[str, RouteResult] = {}
         self.alerts_history: List[Dict[str, Any]] = []
+        self._alerted_zones: Dict[str, set] = {}  # category -> set of zone_ids already alerted
 
         # Run initial tick 0 setup
         self._initial_setup()
@@ -127,6 +128,7 @@ class SystemCoordinator:
         self.latest_telemetry = self.simulation.step()
         self.hazard_provider.update_telemetry(self.latest_telemetry, timestamp=0.0)
         self.latest_routes = self.route_manager.calculate_all_routes()
+        self._alerted_zones = {}
         self._add_alert("SCENARIO", f"Loaded Scenario: {scenario_key.upper().replace('_', ' ')}", "WARNING")
 
     def reset(self) -> None:
@@ -197,24 +199,63 @@ class SystemCoordinator:
         }
 
     def _check_alerts(self) -> None:
-        """Scan telemetry & routes for alert conditions."""
+        """Scan telemetry & routes for meaningful state-change alerts.
+        
+        Only generates alerts when conditions genuinely change.
+        Avoids repetitive per-tick spam for the same zone/category.
+        """
         for zone_id, pkt in self.latest_telemetry.items():
+            # Fire detection — alert once per zone
             if pkt.flame_detected and pkt.hazard_score >= 0.6:
-                self._add_alert("FIRE", f"Active Flame & High Danger in Zone {zone_id} (Temp: {pkt.temperature}°C)", "DANGER")
-            elif pkt.smoke_level >= 0.7:
-                self._add_alert("SMOKE", f"Heavy Smoke Obscuration in Zone {zone_id} ({pkt.smoke_level * 100:.0f}%)", "WARNING")
-            elif pkt.node_health != HEALTH_HEALTHY:
+                if not self._zone_already_alerted("FIRE_ACTIVE", zone_id):
+                    self._mark_zone_alerted("FIRE_ACTIVE", zone_id)
+                    self._add_alert("FIRE", f"Fire detected in Zone {zone_id} (Temp: {pkt.temperature:.0f}\u00b0C)", "DANGER")
+
+            # Smoke threshold crossing — alert once per zone
+            if pkt.smoke_level >= 0.25 and not self._zone_already_alerted("SMOKE_WARN", zone_id):
+                self._mark_zone_alerted("SMOKE_WARN", zone_id)
+                self._add_alert("SMOKE", f"Smoke detected in Zone {zone_id} ({pkt.smoke_level * 100:.0f}% obscuration)", "WARNING")
+
+            # Heavy smoke — alert once per zone
+            if pkt.smoke_level >= 0.7 and not self._zone_already_alerted("SMOKE_HEAVY", zone_id):
+                self._mark_zone_alerted("SMOKE_HEAVY", zone_id)
+                self._add_alert("SMOKE", f"Heavy smoke obscuration in Zone {zone_id} ({pkt.smoke_level * 100:.0f}%)", "DANGER")
+
+            # Hazard elevation — alert once per zone
+            if pkt.hazard_score >= 0.40 and not self._zone_already_alerted("HAZARD_ELEVATED", zone_id):
+                self._mark_zone_alerted("HAZARD_ELEVATED", zone_id)
+                self._add_alert("HAZARD", f"Hazard elevated in Zone {zone_id} (score: {pkt.hazard_score:.2f}, state: {pkt.evacuation_state})", "WARNING")
+
+            # Node health — alert once per zone
+            if pkt.node_health != HEALTH_HEALTHY and not self._zone_already_alerted("NODE_HEALTH", zone_id):
+                self._mark_zone_alerted("NODE_HEALTH", zone_id)
                 self._add_alert("HEALTH", f"Node {pkt.node_id} reported {pkt.node_health} status", "WARNING")
 
-        # Check for Shelter-In-Place conditions
+        # Shelter-In-Place — alert once per combination
         sheltered_zones = [z_id for z_id, r in self.latest_routes.items() if r.is_shelter_in_place]
         if sheltered_zones:
-            self._add_alert("EVACUATION", f"🚨 SHELTER IN PLACE ACTIVE for zones: {', '.join(sheltered_zones)}", "CRITICAL")
+            shelter_key = ",".join(sorted(sheltered_zones))
+            if not self._zone_already_alerted("SHELTER", shelter_key):
+                self._mark_zone_alerted("SHELTER", shelter_key)
+                self._add_alert("EVACUATION", f"\U0001f6a8 SHELTER IN PLACE for zones: {', '.join(sheltered_zones)}", "CRITICAL")
+
+    def _zone_already_alerted(self, category: str, zone_id: str) -> bool:
+        """Check if a zone has already fired a specific alert category."""
+        return zone_id in self._alerted_zones.get(category, set())
+
+    def _mark_zone_alerted(self, category: str, zone_id: str) -> None:
+        """Mark a zone as having fired a specific alert category."""
+        if category not in self._alerted_zones:
+            self._alerted_zones[category] = set()
+        self._alerted_zones[category].add(zone_id)
 
     def _add_alert(self, category: str, message: str, level: str) -> None:
-        """Add an alert entry to the chronological log."""
-        # Avoid exact duplicate message spam
-        if self.alerts_history and self.alerts_history[-1]["message"] == message:
+        """Add an alert entry to the chronological log.
+        
+        Deduplicates by checking the most recent alert (position 0).
+        """
+        # Avoid exact duplicate of the most recent alert
+        if self.alerts_history and self.alerts_history[0]["message"] == message:
             return
         
         self.alerts_history.insert(0, {

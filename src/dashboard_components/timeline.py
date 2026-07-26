@@ -1,9 +1,10 @@
 """
-SurakshaPath AI — Phase 8.4.2 Fixed-Height Intelligent Event Console.
+SurakshaPath AI — Final Polish: Intelligent Event Console.
 
 Renders a fixed-height, internally scrollable emergency event console:
   - Fixed 420px scrollable container preventing page overflow.
   - Merges backend alerts with genuine AI decision events (detected from actual RouteResult changes).
+  - Deduplicates events by message content — no repetitive spam.
   - Displays latest 15 operational story events chronologically.
   - High-contrast SCADA alert cards with category-specific styling.
   - No fabricated events — only displays what the backend actually produces.
@@ -65,6 +66,11 @@ _TIMELINE_CSS = """
     border-left: 4px solid #22c55e;
     color: #166534;
 }
+.tl-hazard {
+    background-color: #fff7ed;
+    border-left: 4px solid #ea580c;
+    color: #9a3412;
+}
 .tl-system {
     background-color: #f8fafc;
     border-left: 4px solid #64748b;
@@ -85,6 +91,7 @@ _CATEGORY_STYLE = {
     "AI_REROUTE": ("tl-ai", "\U0001f9e0"),
     "EVACUATION": ("tl-evac", "\U0001f6a8"),
     "LED_UPDATE": ("tl-led", "\U0001f4a1"),
+    "HAZARD": ("tl-hazard", "\u26a0\ufe0f"),
     "HEALTH": ("tl-health", "\u26a0\ufe0f"),
     "SCENARIO": ("tl-system", "\U0001f3af"),
     "SYSTEM": ("tl-system", "\U0001f4a1"),
@@ -98,7 +105,7 @@ def render_event_timeline(
     """Render fixed-height, internally scrollable SCADA event timeline console.
 
     Merges backend alerts with genuine AI decision events and displays them
-    as a chronological emergency response story.
+    as a chronological emergency response story. Deduplicates by message content.
 
     Args:
         alerts: List of alert dicts from SystemCoordinator.alerts_history.
@@ -119,8 +126,17 @@ def render_event_timeline(
 
     all_events.sort(key=lambda e: e.get("tick", 0), reverse=True)
 
-    # Take latest 15 events only — discard older entries
-    recent_events = all_events[:15]
+    # Deduplicate by message content — keep earliest occurrence of each unique message
+    seen_messages = set()
+    unique_events = []
+    for event in all_events:
+        msg = event.get("message", "")
+        if msg not in seen_messages:
+            seen_messages.add(msg)
+            unique_events.append(event)
+
+    # Take latest 15 unique events only
+    recent_events = unique_events[:15]
 
     # Inject CSS once
     st.markdown(_TIMELINE_CSS, unsafe_allow_html=True)

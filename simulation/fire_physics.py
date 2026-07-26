@@ -42,9 +42,9 @@ class FirePhysicsModel:
         self,
         ambient_temp_c: float = 25.0,
         max_temp_c: float = 800.0,
-        base_growth_rate: float = 0.03,
+        base_growth_rate: float = 0.02,
         cooling_rate: float = 0.01,
-        heat_transfer_coeff: float = 0.05,
+        heat_transfer_coeff: float = 0.035,
     ) -> None:
         """Initialize FirePhysicsModel.
 
@@ -167,14 +167,14 @@ class FirePhysicsModel:
                     next_temperatures[zone_a] -= heat_flow * 0.5
                     next_temperatures[zone_b] += heat_flow * 0.5
 
-                    # Spontaneous secondary ignition if adjacent temperature exceeds 150°C
-                    if temp_a > 150.0 and not self._states[zone_b].is_ignited:
-                        if self._states[zone_a].intensity > 0.4:
-                            self.ignite(zone_b, initial_intensity=0.1)
+                    # Spontaneous secondary ignition if adjacent temperature exceeds 200°C
+                    if temp_a > 200.0 and not self._states[zone_b].is_ignited:
+                        if self._states[zone_a].intensity > 0.5:
+                            self.ignite(zone_b, initial_intensity=0.06)
 
-                    if temp_b > 150.0 and not self._states[zone_a].is_ignited:
-                        if self._states[zone_b].intensity > 0.4:
-                            self.ignite(zone_a, initial_intensity=0.1)
+                    if temp_b > 200.0 and not self._states[zone_a].is_ignited:
+                        if self._states[zone_b].intensity > 0.5:
+                            self.ignite(zone_a, initial_intensity=0.06)
 
         # Apply next temperatures
         for zone_id, new_temp in next_temperatures.items():

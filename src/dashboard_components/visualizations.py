@@ -1,12 +1,12 @@
 """
-SurakshaPath AI — Phase 8.4.2 Professional SCADA Emergency Command Center Visualizer.
+SurakshaPath AI — Final Polish: Professional SCADA Emergency Command Center Visualizer.
 
 Renders a Honeywell-style Emergency Command Center visual experience:
-  - Complete removal of all static decorative occupant icons from room groups during evacuation.
-  - Realistic corridor-mounted LED guidance chevrons with soft SVG glow and pulsing animation.
+  - Complete removal of all static decorative occupant icons during evacuation.
+  - Realistic corridor-mounted LED guidance chevrons with soft SVG glow, trail paths, and pulsing animation.
   - Dynamic route-aware LED rendering: only safe corridor segments are illuminated.
   - Hazard-driven exit state visualization (safe pulsing green / blocked flashing red / inactive grey).
-  - Smooth animated occupant movement following the current backend RouteResult path.
+  - Smooth animated occupant movement following the current backend RouteResult path with exit fade-out.
   - CSS fade-in transitions for smooth route change rendering.
   - 100% backend-driven: all hazard, smoke, fire, route values come directly from
     TelemetryPacket and RouteResult with ZERO artificial damping or fabrication.
@@ -26,14 +26,14 @@ from .building_mapper import get_svg_filepath, NODE_TO_ROOM_MAP
 # ─── Constants ───────────────────────────────────────────────────────
 PERSON_EMOJIS = frozenset({"\U0001f465", "\U0001f464", "\U0001f468", "\U0001f9d1", "\U0001f469", "\U0001f9cd", "\U0001f6b6"})
 HAZARD_UNSAFE_THRESHOLD = 0.50
-CHEVRON_SPACING_PX = 45.0
+CHEVRON_SPACING_PX = 35.0
 LED_PRIMARY = "#10b981"
 LED_CORE = "#a7f3d0"
 EXIT_SAFE_FILL = "#dcfce7"
 EXIT_BLOCKED_FILL = "#fef2f2"
 EXIT_INACTIVE_FILL = "#e2e8f0"
 
-# ─── SVG CSS Keyframe Animations (Phase 8.4.2) ──────────────────────
+# ─── SVG CSS Keyframe Animations (Final Polish) ─────────────────────
 SVG_PHASE_842_CSS = """
 <style>
   @keyframes flameFlicker {
@@ -42,9 +42,16 @@ SVG_PHASE_842_CSS = """
     100% { transform: scale(1.0); opacity: 0.9; }
   }
   @keyframes ledPulse {
-    0% { opacity: 0.30; }
+    0% { opacity: 0.25; }
+    25% { opacity: 0.7; }
     50% { opacity: 1.0; }
-    100% { opacity: 0.30; }
+    75% { opacity: 0.7; }
+    100% { opacity: 0.25; }
+  }
+  @keyframes ledTrail {
+    0% { stroke-dashoffset: 30; opacity: 0.3; }
+    50% { opacity: 0.7; }
+    100% { stroke-dashoffset: 0; opacity: 0.3; }
   }
   @keyframes exitSafeGlow {
     0% { stroke-width: 4; opacity: 0.85; }
@@ -65,7 +72,17 @@ SVG_PHASE_842_CSS = """
     transform-origin: center;
   }
   .led-chevron {
-    animation: fadeIn 0.4s ease-out, ledPulse 1.8s ease-in-out infinite;
+    animation: fadeIn 0.4s ease-out, ledPulse 2.0s ease-in-out infinite;
+  }
+  .led-trail {
+    stroke: #10b981;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-dasharray: 5 10;
+    fill: none;
+    opacity: 0.4;
+    filter: url(#led-glow-trail);
+    animation: ledTrail 1.2s linear infinite;
   }
   .exit-safe {
     animation: exitSafeGlow 1.5s ease-in-out infinite;
@@ -79,10 +96,17 @@ SVG_PHASE_842_CSS = """
 </style>
 """
 
-# ─── SVG LED Glow Filter Definition ─────────────────────────────────
+# ─── SVG Filter Definitions ─────────────────────────────────────────
 SVG_LED_GLOW_FILTER = (
     '<filter id="led-glow" x="-50%" y="-50%" width="200%" height="200%">'
-    '<feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"/>'
+    '<feGaussianBlur in="SourceGraphic" stdDeviation="3.5" result="blur"/>'
+    '<feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>'
+    '</filter>'
+)
+
+SVG_LED_TRAIL_FILTER = (
+    '<filter id="led-glow-trail" x="-50%" y="-50%" width="200%" height="200%">'
+    '<feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>'
     '<feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>'
     '</filter>'
 )
@@ -175,7 +199,7 @@ def _apply_phase_8_4_2_overlays(
     selected_zone_id: Optional[str] = None,
     current_tick: int = 0,
 ) -> str:
-    """Inject Phase 8.4.2 SCADA overlays into architectural SVG template.
+    """Inject SCADA overlays into architectural SVG template.
 
     All values are read directly from backend TelemetryPacket and RouteResult.
     No artificial damping, scaling, or fabrication of any values.
@@ -183,6 +207,7 @@ def _apply_phase_8_4_2_overlays(
     Overlays injected:
       - Hazard room fills & smoke layers (raw backend hazard_score / smoke_level)
       - Animated flame indicators (raw backend flame_detected / temperature)
+      - Flowing LED trail paths along safe route segments
       - Corridor LED chevron guidance (only on safe segments)
       - Animated evacuating occupants (following current RouteResult.path)
       - Exit state visualization (safe/blocked/inactive from backend)
@@ -202,20 +227,23 @@ def _apply_phase_8_4_2_overlays(
     tree = ET.parse(svg_path)
     root = tree.getroot()
 
-    # ─── 1. Inject CSS Animations & LED Glow Filter into <defs> ───
+    # ─── 1. Inject CSS Animations & Glow Filters into <defs> ─────
     defs_elem = root.find("{http://www.w3.org/2000/svg}defs")
     if defs_elem is None:
         defs_elem = root.find("defs")
 
     style_element = ET.fromstring(SVG_PHASE_842_CSS)
     glow_filter = ET.fromstring(SVG_LED_GLOW_FILTER)
+    trail_filter = ET.fromstring(SVG_LED_TRAIL_FILTER)
 
     if defs_elem is not None:
         defs_elem.append(style_element)
         defs_elem.append(glow_filter)
+        defs_elem.append(trail_filter)
     else:
         root.insert(0, style_element)
         root.insert(1, glow_filter)
+        root.insert(2, trail_filter)
 
     # ─── 2. Process All Room Groups ──────────────────────────────
     room_centers: Dict[str, Tuple[float, float]] = {}
@@ -233,9 +261,15 @@ def _apply_phase_8_4_2_overlays(
         if zone_id.startswith("X-") or zone_id.startswith("S-"):
             exit_zones.add(zone_id)
 
-        # A. Strip ALL static decorative person icons once evacuation begins (Req #1)
+        # A. Strip ALL static decorative person icons once evacuation begins
         if current_tick > 0:
             _strip_static_occupant_icons(elem)
+
+        # Also strip decorative person icons from rooms with zero actual occupancy at T=0
+        if current_tick == 0:
+            room_pkt = telemetry.get(zone_id)
+            if room_pkt and getattr(room_pkt, "occupancy_count", 0) == 0:
+                _strip_static_occupant_icons(elem)
 
         # B. Extract primary room geometry (first <rect> child)
         rect_elem = None
@@ -283,7 +317,7 @@ def _apply_phase_8_4_2_overlays(
             stroke_color = "#2563eb"
             stroke_width = "5"
 
-        # E. Exit state visualization (Req #7) — driven by backend routing decisions
+        # E. Exit state visualization — driven by backend routing decisions
         if zone_id.startswith("X-"):
             exit_state = _get_exit_state(zone_id, telemetry, routes)
             if exit_state == "safe":
@@ -357,7 +391,7 @@ def _apply_phase_8_4_2_overlays(
             badge_txt.text = f"\U0001f465 {occupants}"
             elem.append(badge_txt)
 
-    # ─── 3. Render Corridor LED Guidance & Animated Occupant Entities ───
+    # ─── 3. Render LED Guidance Trails, Chevrons & Animated Occupants ───
     routes_to_draw: List[Any] = []
     if selected_zone_id and selected_zone_id in routes:
         routes_to_draw.append(routes[selected_zone_id])
@@ -387,7 +421,28 @@ def _apply_phase_8_4_2_overlays(
             continue
         drawn_paths.add(path_key)
 
-        # A. LED Chevrons — ONLY on safe segments (Req #3, #4)
+        # A. Draw flowing LED trail path along safe route segments
+        safe_pts: List[Tuple[float, float]] = []
+        for i in range(len(floor_path_pts)):
+            n_id = floor_path_pts[i][0]
+            pkt_n = telemetry.get(n_id)
+            h_n = getattr(pkt_n, "hazard_score", 0.0) if pkt_n else 0.0
+            if h_n < HAZARD_UNSAFE_THRESHOLD:
+                safe_pts.append(floor_path_pts[i][1])
+            else:
+                # Break the trail at unsafe points
+                if len(safe_pts) >= 2:
+                    trail_d = "M " + " L ".join(f"{p[0]:.1f} {p[1]:.1f}" for p in safe_pts)
+                    trail_elem = ET.Element("path", {"d": trail_d, "class": "led-trail"})
+                    root.append(trail_elem)
+                safe_pts = []
+        # Trailing safe points
+        if len(safe_pts) >= 2:
+            trail_d = "M " + " L ".join(f"{p[0]:.1f} {p[1]:.1f}" for p in safe_pts)
+            trail_elem = ET.Element("path", {"d": trail_d, "class": "led-trail"})
+            root.append(trail_elem)
+
+        # B. LED Chevrons — ONLY on safe segments
         for i in range(len(floor_path_pts) - 1):
             node_a_id = floor_path_pts[i][0]
             node_b_id = floor_path_pts[i + 1][0]
@@ -418,7 +473,7 @@ def _apply_phase_8_4_2_overlays(
                     "style": f"animation-delay: 0s, {delay:.2f}s;",
                 })
                 ET.SubElement(g_outer, "polygon", {
-                    "points": "-5,-6 10,0 -5,6",
+                    "points": "-6,-7 11,0 -6,7",
                     "fill": LED_PRIMARY,
                     "opacity": "0.7",
                     "filter": "url(#led-glow)",
@@ -438,7 +493,7 @@ def _apply_phase_8_4_2_overlays(
                 })
                 root.append(g_inner)
 
-        # B. Animated Occupants Following Current Backend Route (Req #6)
+        # C. Animated Occupants Following Current Backend Route
         source_zone = path_nodes[0]
         src_pkt = telemetry.get(source_zone)
         occupants = getattr(src_pkt, "occupancy_count", 0) if src_pkt else 0
@@ -447,9 +502,9 @@ def _apply_phase_8_4_2_overlays(
             num_segments = len(floor_path_pts) - 1
 
             # Spread multiple occupants along the path with staggered progress
-            for occ_idx in range(min(occupants, 5)):
-                stagger = occ_idx * 0.08
-                progress = min(1.0, max(0.0, (current_tick / max(1, num_segments * 3.5)) - stagger))
+            for occ_idx in range(min(occupants, 4)):
+                stagger = occ_idx * 0.12
+                progress = min(1.0, max(0.0, (current_tick / max(1, num_segments * 5.0)) - stagger))
 
                 if progress >= 1.0:
                     continue  # Occupant has reached exit — evacuated
@@ -472,6 +527,12 @@ def _apply_phase_8_4_2_overlays(
                 ox = p_start[0] + sub_t * (p_end[0] - p_start[0])
                 oy = p_start[1] + sub_t * (p_end[1] - p_start[1])
 
+                # Fade out occupant near exit for natural disappearance
+                if progress > 0.85:
+                    occ_opacity = f"{max(0.1, 1.0 - ((progress - 0.85) / 0.15)):.2f}"
+                else:
+                    occ_opacity = "1.0"
+
                 occ_txt = ET.Element("text", {
                     "x": f"{ox:.1f}",
                     "y": f"{oy + 6:.1f}",
@@ -479,6 +540,7 @@ def _apply_phase_8_4_2_overlays(
                     "font-size": "20",
                     "text-anchor": "middle",
                     "class": "occupant-entity",
+                    "opacity": occ_opacity,
                 })
                 occ_txt.text = "\U0001f464"
                 root.append(occ_txt)
@@ -501,7 +563,7 @@ def render_commercial_floor_plan(
     selected_zone_id: Optional[str] = None,
     current_tick: int = 0,
 ) -> str:
-    """Render commercial building floor plan with Phase 8.4.2 SCADA overlays.
+    """Render commercial building floor plan with SCADA overlays.
 
     Args:
         graph: BuildingGraph topology (unused in visualization phase).
@@ -519,7 +581,7 @@ def render_commercial_floor_plan(
     if os.path.exists(svg_path):
         st.subheader(f"\U0001f3e2 Commercial Office Floor Plan \u2014 Storey {selected_floor}")
 
-        # Generate live SVG with Phase 8.4.2 overlays
+        # Generate live SVG with overlays
         if telemetry and routes:
             display_svg_path = _apply_phase_8_4_2_overlays(
                 svg_path, telemetry, routes, selected_floor, selected_zone_id, current_tick

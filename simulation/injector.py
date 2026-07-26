@@ -130,6 +130,12 @@ class SimulationEngine:
                 intensity = float(evt.get("parameters", {}).get("intensity", 0.15))
                 self.fire_physics.ignite(z_id, initial_intensity=intensity)
 
+            elif evt_type == "BLOCK_EXIT" and z_id in self.building_zones:
+                # Block exit by igniting fire at exit zone — routing engine
+                # will naturally reroute occupants to alternate exits
+                self.fire_physics.ignite(z_id, initial_intensity=0.5)
+                self.smoke_physics.set_smoke_level(z_id, 0.6)
+
         # 2. Advance Fire and Smoke Physics
         fire_states = self.fire_physics.update(
             adjacency_edges=self.adjacency_edges,
