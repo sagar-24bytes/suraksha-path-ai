@@ -2,7 +2,7 @@
 
 **AI-Assisted Dynamic Fire Evacuation System for Commercial Buildings**
 
-*Honeywell Campus Connect Hackathon 2026*
+
 
 ---
 
@@ -148,5 +148,3 @@ suraksha_path_ai/
 ```
 
 ---
-
-*SurakshaPath AI — Honeywell Campus Connect 2026*
